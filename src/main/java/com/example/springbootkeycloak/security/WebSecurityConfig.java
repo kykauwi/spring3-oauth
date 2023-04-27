@@ -16,14 +16,15 @@ public class WebSecurityConfig {
 
     public static final String ADMIN = "admin";
     public static final String USER = "user";
+
     private final JwtAuthConverter jwtAuthConverter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/test/anonymous", "/test/anonymous/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/test/admin", "/test/admin/**").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET, "/test/user").hasAnyRole(ADMIN, USER)
+                .requestMatchers(HttpMethod.GET, "/anonymous").permitAll()
+                .requestMatchers(HttpMethod.GET, "/admin").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.GET, "/user").hasAnyRole(ADMIN, USER)
                 .anyRequest().authenticated();
         http.oauth2ResourceServer()
                 .jwt()
