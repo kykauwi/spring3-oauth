@@ -1,6 +1,7 @@
 package com.example.springbootkeycloak.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,8 +12,11 @@ import java.security.Principal;
 public class TestController {
 
     @GetMapping("/anonymous")
-    public ResponseEntity<String> getAnonymous() {
-        return ResponseEntity.ok("Hello Anonymous");
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> getAnonymous(Principal principal) {
+        JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
+        String userName = (String) token.getTokenAttributes().get("name");
+        return ResponseEntity.ok("Hello Anonymous - " + userName);
     }
 
     @GetMapping("/admin")
